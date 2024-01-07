@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    /* styles.css */
+
+    * {
+      font-family: 'Poppins';
+    }
+
+    body {
+      background: hsl(218deg 50% 91%);
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2em;
+    }
+
+    h1 {
+      color: hsl(233deg 36% 38%);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    label {
+      color: hsl(0deg 0% 30%);
+    }
+
+    input {
+      padding: 0.5em;
+      border: 1px solid hsl(0deg 0% 80%);
+      border-radius: 5px;
+    }
+
+    button {
+      cursor: pointer;
+      padding: 0.5em 1em;
+      background: hsl(233deg 36% 38%);
+      color: hsl(0, 29%, 95%);
+      border: none;
+      border-radius: 5px;
+      font-weight: 600;
+      width: 10em;
+    }
+
+    a {
+      color: hsl(233deg 36% 38%);
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 1em;
+      margin-bottom: 1em;
+      border-collapse: collapse;
+      table-layout: fixed; /* Fixed table layout to ensure equal column widths */
+    }
+
+    th, td {
+      border: 1px solid hsl(0deg 0% 80%);
+      padding: 0.5em;
+      text-align: left;
+      word-wrap: break-word; /* Allow long words to break and wrap onto the next line */
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 65%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 20%;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3) {
+      width: 15%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Hi <%= name %></h1>
+    <h1>URL Shrinker</h1>
+    <form action="/shortUrls" method="POST">
+      <label for="fullUrl">Url</label>
+      <input required placeholder="Url" type="url" name="fullUrl" id="fullUrl">
+
+      <label for="shortUrl">shortUrl</label>
+      <input placeholder="Short Url" name="shortUrl" id="shortUrl">
+
+      <button type="submit">Shorten</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Full URL</th>
+          <th>Short URL</th>
+          <th>Clicks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% urls.forEach(shortUrl => { %>
+        <tr>
+          <td><a href="<%= shortUrl.fullUrl %>"><%= shortUrl.fullUrl %></a></td>
+          <td><a href="<%= shortUrl.shortUrl %>"><%= shortUrl.shortUrl %></a></td>
+          <td><%= shortUrl.clicks %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <form action="/logout?_method=DELETE" method="POST">
+      <button type="submit">Log Out</button>
+    </form>
+  </div>
+</body>
+
+</html>

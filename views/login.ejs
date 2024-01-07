@@ -1,0 +1,100 @@
+<!-- views/login.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login</title>
+  <link rel="stylesheet" type="text/css" href="login.css">
+  <style>
+    * {
+  font-family: 'Poppins';
+}
+
+body {
+  user-select: none;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsl(218deg 50% 91%);
+  height: 100vh;
+}
+
+form {
+  background: hsl(213deg 85% 97%);
+  padding: 1.2em;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  box-shadow: 0 0 1em hsl(231deg 62% 94%);
+  gap: 1em;
+}
+
+label {
+  color: hsl(0deg 0% 30%);
+  margin-bottom: 0.2em;
+}
+
+input {
+  outline: none;
+  border: none;
+  background: hsl(0deg 0% 100%);
+  box-shadow: 0 0 1em hsl(231deg 62% 94%);
+  padding: 0.8em;
+  border-radius: 10px;
+  color: hsl(0deg 0% 30%);
+  font-size: 1em; /* Adjusted font size */
+}
+
+input::placeholder {
+  color: hsl(0deg 0% 0%);
+  font-size: 0.9em;
+}
+
+a {
+  color: hsl(233deg 36% 38%);
+  text-decoration: none; /* Remove underline from links */
+}
+
+p {
+    margin: 0px;
+}
+
+button {
+  cursor: pointer;
+  padding: 0.8em;
+  background: hsl(233deg 36% 38%);
+  color: hsl(0 0 100);
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.footer {
+  display: flex;
+  font-size: 0.7em;
+  color: hsl(0deg 0% 37%);
+  gap: 1em;
+  padding-bottom: 1em;
+  span {
+    cursor: pointer;
+  }
+}
+
+
+
+  </style>
+</head>
+<body>
+    <form action="/login" method="post">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <p><a href="/forgot-password">Forgot Password?</a></p>
+        <p><a href="/register">Create an account</a></p>
+        <button type="submit">Login</button>
+    </form>
+</body>
+</html>

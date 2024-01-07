@@ -1,0 +1,79 @@
+<!-- views/register.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Registration</title>
+  <style>
+    /* styles.css */
+
+* {
+  font-family: 'Poppins';
+}
+
+body {
+  user-select: none;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsl(218deg 50% 91%);
+  height: 100vh;
+}
+
+form {
+  background: hsl(213deg 85% 97%);
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  box-shadow: 0 0 1em hsl(231deg 62% 94%);
+  gap: 0.8em;
+}
+
+label {
+  color: hsl(0deg 0% 30%);
+  margin-bottom: 0.2em;
+}
+
+input {
+  outline: none;
+  border: none;
+  background: hsl(0deg 0% 100%);
+  box-shadow: 0 0 1em hsl(231deg 62% 94%);
+  padding: 0.5em;
+  border-radius: 10px;
+  color: hsl(0deg 0% 30%);
+  font-size: 1em;
+}
+
+input::placeholder {
+  color: hsl(0deg 0% 0%);
+  font-size: 0.9em;
+}
+
+button {
+  cursor: pointer;
+  padding: 1em 2em;
+  background: hsl(233deg 36% 38%);
+  color: hsl(0, 41%, 97%);
+  border: none;
+  border-radius: 15px;
+  font-weight: 600;
+}
+  </style>
+</head>
+<body>
+  <form action="/register" method="post">
+    <h1><%= message%></h1>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <button type="submit">Register</button>
+  </form>
+</body>
+</html>
