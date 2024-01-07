@@ -1,4 +1,5 @@
-const crypto = require('crypto');
+//const crypto = require('crypto');
+import crypto from 'crypto';
 
 function generateUniqueToken() {
   // Generate a random string using crypto
@@ -6,4 +7,4 @@ function generateUniqueToken() {
   return token;
 }
 
-module.exports = generateUniqueToken;
+export default generateUniqueToken;

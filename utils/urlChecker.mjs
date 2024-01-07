@@ -1,4 +1,4 @@
-import urlExist from "url-exist";
+import {urlExist} from "url-exist";
 
 
 async function checkURLExists(full) {
@@ -7,4 +7,4 @@ async function checkURLExists(full) {
     return exists
 }
 
-module.exports = checkURLExists;
+export default checkURLExists;

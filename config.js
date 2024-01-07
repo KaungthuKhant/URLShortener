@@ -1,5 +1,5 @@
 // config.js
-module.exports = {
+export default {
     mongodbURI: 'mongodb://localhost/emailAuthPractice',
     email: {
       service: 'gmail',

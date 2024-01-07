@@ -1,28 +1,41 @@
+/*
 if (process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
+*/
+// import { config } from 'dotenv';
+import { config as dotenvConfig } from 'dotenv';
 
-const express = require('express')
+if (process.env.NODE_ENV !== 'production') {
+    dotenvConfig();
+}
+
+
+import express from 'express';
+import bcrypt from 'bcrypt';
+import passport from 'passport';
+import nodemailer from 'nodemailer';
+import flash from 'express-flash';
+import session from 'express-session';
+import methodOverride from 'method-override';
+import shortId from 'shortid';
+
+import config from './config.js'
+
+
 const app = express()
-const bcrypt = require('bcrypt')
-const passport = require('passport')
-const nodemailer = require('nodemailer');
-const config = require('./config');
-const flash = require('express-flash')
-const session = require('express-session')
-const methodOverride = require('method-override')
-const shortId = require('shortid')
+
 
 // set up view enginer
 app.set('view engine', 'ejs');
 
 // utils
-const sendPasswordResetEmail = require('./utils/emailHelper');
-const generateUniqueToken = require('./utils/tokenHelper');
+import sendPasswordResetEmail from './utils/emailHelper.js';
+import generateUniqueToken from './utils/tokenHelper.js';
 
 // mongodb 
-const mongoose = require("mongoose")
-const User = require("./Users")
+import mongoose from 'mongoose'
+import User from './Users.js'
 
 mongoose.connect("mongodb://localhost/shortURLWithEmailAuthentication")
 
@@ -68,7 +81,8 @@ async function findFullUrl(shortUrlParam){
     
 
 
-const initializePassport = require('./passport-config')
+//const initializePassport = require('./passport-config')
+import initializePassport from './passport-config.js';
 initializePassport(
     passport, 
     //emailK => User.findOne({ email: emailK }).exec(),

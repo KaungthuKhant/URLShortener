@@ -1,7 +1,10 @@
 // email.js
 
-const nodemailer = require('nodemailer');
-const config = require('../config'); // Adjust the path based on your project structure
+//const nodemailer = require('nodemailer');
+//const config = require('../config'); // Adjust the path based on your project structure
+
+import nodemailer from 'nodemailer';
+import config from '../config.js'
 
 // Function to send a password reset email
 async function sendPasswordResetEmail(email, resetToken) {
@@ -33,4 +36,4 @@ async function sendPasswordResetEmail(email, resetToken) {
 }
   
 
-module.exports = sendPasswordResetEmail;
+export default sendPasswordResetEmail;
