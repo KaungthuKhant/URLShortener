@@ -31,8 +31,22 @@
 
     form {
       display: flex;
-      flex-direction: column;
-      gap: 1em;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .fullURLContainer,
+    .shortURLContainer,
+    .submitButtonContainer {
+      flex: 0.3;
+    }
+
+    .fullURLContainer {
+      flex: 2.5; /* You can adjust the flex value based on your preferred layout */
+    }
+
+    .shortURLContainer {
+      flex: 1.5;
     }
 
     label {
@@ -47,13 +61,37 @@
 
     button {
       cursor: pointer;
-      padding: 0.5em 1em;
+      padding: 0.5em;
       background: hsl(233deg 36% 38%);
       color: hsl(0, 29%, 95%);
       border: none;
       border-radius: 5px;
       font-weight: 600;
       width: 10em;
+    }
+
+    .copyButton{
+      width: 25px;
+    }
+
+    .shortenButton {
+      width: 75px;
+    }
+
+    .shortURLDiv {
+      text-align: left;
+    }
+
+    .shortURLLinkDiv {
+      display: inline-block;
+    }
+
+    .copyButtonDiv {
+      float: right;
+    }
+
+    #fullUrl{
+      width: 350px;
     }
 
     a {
@@ -83,33 +121,83 @@
 
     th:nth-child(1),
     td:nth-child(1) {
-      width: 65%;
+      width: 57%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     th:nth-child(2),
     td:nth-child(2) {
-      width: 20%;
+      width: 35%;
     }
 
     th:nth-child(3),
     td:nth-child(3) {
-      width: 15%;
+      width: 8%;
     }
   </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Wait for the DOM to be fully loaded
+  
+      // Get all elements with the class 'copyButton'
+      var copyButtons = document.querySelectorAll('.copyButton');
+  
+      // Iterate over each copyButton
+      copyButtons.forEach(function (button) {
+        // Add a click event listener to each copyButton
+        button.addEventListener('click', function () {
+          // Get the parent element of the button, which contains the short URL
+          var shortURLContainer = button.closest('.shortURLDiv');
+  
+          // Get the anchor element with the short URL
+          var shortURLAnchor = shortURLContainer.querySelector('a');
+  
+          // Get the text content of the short URL
+          var shortURLText = shortURLAnchor.textContent;
+  
+          // Create a textarea element to hold the text temporarily
+          var textarea = document.createElement('textarea');
+          textarea.value = shortURLText;
+  
+          // Append the textarea to the document
+          document.body.appendChild(textarea);
+  
+          // Select the text in the textarea
+          textarea.select();
+  
+          // Copy the selected text to the clipboard
+          document.execCommand('copy');
+  
+          // Remove the textarea from the document
+          document.body.removeChild(textarea);
+        });
+      });
+    });
+  </script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
   <div class="container">
     <h1>Hi <%= name %></h1>
-    <h1>URL Shrinker</h1>
     <form action="/shortUrls" method="POST">
-      <label for="fullUrl">Url</label>
-      <input required placeholder="Url" type="url" name="fullUrl" id="fullUrl">
-
-      <label for="shortUrl">shortUrl</label>
+      <div class="fullURLContainer">
+        <label for="fullUrl">Url</label>
+        <input required placeholder="Url" type="url" name="fullUrl" id="fullUrl">
+      </div>
+      
+      <div class="shortURLContainer">
+        <label for="shortUrl">shortUrl</label>
       <input placeholder="Short Url" name="shortUrl" id="shortUrl">
-
-      <button type="submit">Shorten</button>
+      </div>
+      
+      <div class="submitButtonContainer">
+        <button type="submit" class="shortenButton">Shorten</button>
+      </div>
+      
     </form>
 
     <table>
@@ -124,7 +212,19 @@
         <% urls.forEach(shortUrl => { %>
         <tr>
           <td><a href="<%= shortUrl.fullUrl %>"><%= shortUrl.fullUrl %></a></td>
-          <td><a href="<%= shortUrl.shortUrl %>"><%= shortUrl.shortUrl %></a></td>
+          <td>
+            <div class="shortURLDiv">
+              <div class="shortURLLinkDiv">
+                <a href="<%= shortUrl.shortUrl %>">localhost:8800/<%= shortUrl.shortUrl %></a>
+              </div>
+              <div class="copyButtonDiv">
+                <button class="copyButton"><i class="fa fa-clone"></i></button>
+              </div>
+            </div>
+            
+            
+            
+          </td>
           <td><%= shortUrl.clicks %></td>
         </tr>
         <% }) %>

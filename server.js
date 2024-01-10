@@ -92,12 +92,13 @@ app.use(methodOverride('_method'))
 
 app.get('/', checkAuthenticated, async (req, res) =>{
     let links = await findLinksByEmail(req.user.email)
+    console.log("sending to index.ejs with user name of " + req.user.name)
     res.render('index.ejs', {name: req.user.name, urls: links, message: ""})
 })
 
 app.get('/login', checkNotAuthenticated, (req, res) =>{
     res.render('login.ejs')
-}) 
+})
 
 app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
@@ -276,6 +277,9 @@ app.post('/shortUrls', async (req, res) =>{
         short = await shortId.generate()
         console.log("short url is " + short)
     }
+    //http://localhost:8800/8N1qoB8LW
+    //short = `http://localhost:${config.server.port}/` + short
+    
     await saveLink(req.body.fullUrl, short, 0, req.user.email)
     res.redirect('/')
 })
