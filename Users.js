@@ -18,11 +18,8 @@ const linkSchema = new mongoose.Schema({
  */
 
 const userSchema = new mongoose.Schema({
-    schemaType: {
-        type: String,
-        require: true,
-    },
-    
+    schemaType: { type: String, require: true},
+
     name: String,
     email: String,
     password: String,
@@ -35,4 +32,6 @@ const userSchema = new mongoose.Schema({
     clicks: Number
 })
 
+
+// export the Mongoose model named "User" based on the userSchema that you've defined.
 export default mongoose.model("User", userSchema)

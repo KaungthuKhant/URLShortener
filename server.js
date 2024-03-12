@@ -13,7 +13,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 import express from 'express';
 import bcrypt from 'bcrypt';
-import passport from 'passport';
+import passport from 'passport';                      // Passport is authentication middleware for Node.js
 import nodemailer from 'nodemailer';
 import flash from 'express-flash';
 import session from 'express-session';
@@ -22,11 +22,14 @@ import shortId from 'shortid';
 
 import config from './config.js'
 
-
+// create an instance of the express application. express() return express application
+// you can use this to define routes, middleware and configure various settings for your application
 const app = express()
 
 
-// set up view enginer
+// set up view engine
+// a view engine is responsible for rendering dynamic content and templates on the server before sending them to the client
+// EJS(Embedded JavaScript) allows you to embed JS code directly within your HTML templates
 app.set('view engine', 'ejs');
 
 // utils
@@ -37,24 +40,35 @@ import generateUniqueToken from './utils/tokenHelper.js';
 import mongoose from 'mongoose'
 import User from './Users.js'
 
+// connect to the database
 mongoose.connect("mongodb://localhost/shortURLWithEmailAuthentication")
 
 async function saveUser(namePara, emailPara, passPara){
-    console.log("saving user")
+    console.log("saving user with namePara, emailPara and passPara of " + namePara + " " + emailPara + " " + passPara)
+    // creates a new instance of the User model
     const user = new User({schemaType: "User", name: namePara, email: emailPara, password: passPara})
+
+    // save the model to MongoDB database
+    // save() method is provided by Mongoose and it's used to persist changes to the database.
     await user.save()
     console.log(user)
 }
 
 async function saveLink(fullLink, shortLink, clicksParam, emailParam){
     console.log("searching for smilar results using short url of: " + shortLink)
+
+    // COME BACK TO THIS FUNCTION
     let searchResults = await findFullUrl(shortLink)
     console.log("results found " + searchResults)
     if (searchResults != null){
         console.log("short url already used")
         return;
     }
+
+    // create a User model (we get the model from Users.js)
     const link = new User({schemaType: "Links", fullUrl: fullLink, shortUrl: shortLink, email: emailParam, clicks: clicksParam})
+
+    // save the user model 
     await link.save()
     console.log(link)
 }
@@ -70,11 +84,15 @@ async function findByEmail(eml){
 }
 
 async function findLinksByEmail(emailParam){
+
+  // this find function is provided by Mongoose 
     let links = await User.find({ schemaType: "Links", email: emailParam})
     return links
 }
 
 async function findFullUrl(shortUrlParam){
+  // this find function is provided by Mongoose
+  // find out what it does. looks like it find the first model that matches and return it.
     let fullUrl = await User.findOne({schemaType: "Links", shortUrl: shortUrlParam})
     return fullUrl
 }
@@ -87,7 +105,7 @@ initializePassport(
     passport, 
     //emailK => User.findOne({ email: emailK }).exec(),
     findByEmail,
-    id => User.findById(id)
+    id => User.findById(id)       // pass in an arrow function that find  a model by id (Mongoose provide the findById function)
 )
 //const users = []
 
@@ -100,13 +118,25 @@ app.use(session({
     saveUninitialized: false
 
 }))
+// passport.initialize function is provided by Passport.js itself. It initializes Passport and prepares it to be used as middleware within an Express application.
+// it is different from the initialize function that I have inside passport-config.js. they are two different function with the same name
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
 
+
+// OWN EXPLAINATION ABOUT EXPRESS AND ROUTING
+// from the pattern, it looks like get and post the function that are a part of express
+// and they take a few parameters. We can pass in the route as string, middleware and some function 
+// that holds instruction to what actions needs to be done for that route. 
+
+// req: Represents the HTTP request object
+// res: Represents the HTTP response object.
+
+
 app.get('/', checkAuthenticated, async (req, res) =>{
     let links = await findLinksByEmail(req.user.email)
-    console.log("sending to index.ejs with user name of " + req.user.name)
+    console.log("sending to index.ejs with user name of " + req.user)
     res.render('index.ejs', {name: req.user.name, urls: links, message: ""})
 })
 
@@ -141,7 +171,7 @@ app.post('/register', checkNotAuthenticated, async (req, res) =>{
         // Hash the password before saving it to the database
         const hashedPassword = await bcrypt.hash(password, 10);
     
-        const newUser = new User({ schemaType: "User", email: email, password: hashedPassword, isConfirmed: false });
+        const newUser = new User({ schemaType: "User", name: name, email: email, password: hashedPassword, isConfirmed: false });
         // Save the user to the database
         await newUser.save();
 
@@ -278,8 +308,8 @@ app.post('/reset-password', async (req, res) => {
 });
 
 app.post('/shortUrls', async (req, res) =>{
-    let short = req.body.shortUrl
-    let full = req.body.fullUrl
+  let short = req.body.shortUrl;
+  let full = req.body.fullUrl;
     /*
     if (!checkURLExists(full)){
       let links = await findLinksByEmail(req.user.email)
@@ -287,15 +317,14 @@ app.post('/shortUrls', async (req, res) =>{
     }
     */
 
-    if (short == ""){
-        short = await shortId.generate()
-        console.log("short url is " + short)
-    }
-    //http://localhost:8800/8N1qoB8LW
-    //short = `http://localhost:${config.server.port}/` + short
-    
-    await saveLink(req.body.fullUrl, short, 0, req.user.email)
-    res.redirect('/')
+  if (short == "") {
+    short = await shortId.generate(); // Use shortId here
+    short = short.substring(0, 6);
+    console.log("short url is " + short);
+  }
+
+  await saveLink(req.body.fullUrl, short, 0, req.user.email);
+  res.redirect('/');
 })
 
 app.get('/:shortUrl', async (req, res) => {
@@ -364,4 +393,6 @@ const transporter = nodemailer.createTransport({
     },
   });
 
+
+  // this is the port the server will be listening from
 app.listen(8800)
